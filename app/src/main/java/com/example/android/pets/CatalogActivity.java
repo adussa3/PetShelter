@@ -15,6 +15,7 @@
  */
 package com.example.android.pets;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.pets.data.PetContract;
 import com.example.android.pets.data.PetContract.PetEntry;
 import com.example.android.pets.data.PetDbHelper;
 
@@ -72,26 +74,29 @@ public class CatalogActivity extends AppCompatActivity {
      * the pets database.
      */
     private void displayDatabaseInfo() {
-        // To access our database, we instantiate our subclass of SQLiteOpenHelper
-        // and pass the context, which is the current activity.
-        // PetDbHelper mDbHelper = new PetDbHelper(this);
+        
+        /**
+         * Define a projection hat specifies which columns from the database
+         */
+        String[] projection = new String[] {
+                PetEntry._ID,
+                PetEntry.COLUMN_PET_NAME,
+                PetEntry.COLUMN_PET_BREED,
+                PetEntry.COLUMN_PET_GENDER,
+                PetEntry.COLUMN_PET_WEIGHT
+        };
 
-        // Create and/or open a database to read from it
-        // This is basically the same as opening the database in the terminal using SQLite
-        // Ex) '.open shelter.db'
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
-        // Performs a SQL query
-        String[] columns = null;
-        String selection = null; //PetEntry.COLUMN_PET_GENDER + " == ?"; // we use prepared statement ('?') to prevent SQL injection
-        String[] selectionArgs = null; //{String.valueOf(PetEntry.GENDER_MALE)};
-        Cursor cursor = db.query(PetEntry.TABLE_NAME,
-                                 columns,
-                                 selection,
-                                 selectionArgs,
-                         null,
-                          null,
-                         null);
+        /**
+         * Perform a query on the content provider using the ContentResolver
+         * se the {@link PetEntry#CONTENT_URI} to access the pet data
+         */
+        Cursor cursor = getContentResolver().query(
+                PetEntry.CONTENT_URI, // The content URI of the pets table
+                projection,           // The columns to return for each row
+                null,        // Selection criteria
+                null,    // Selection criteria
+                null        // The sorted order for the returned rows
+        );
 
         try {
             // Display the number of rows in the Cursor (which reflects the number of rows in the

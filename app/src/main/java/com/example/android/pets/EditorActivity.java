@@ -136,9 +136,9 @@ public class EditorActivity extends AppCompatActivity {
 
         // Return a toast based on the 'newRowId'
         if (newRowId == -1) {
-            Toast.makeText(this, "Error with saving pet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.pet_not_saved), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Pet saved with id: " + newRowId, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.pet_saved), Toast.LENGTH_SHORT).show();
         }
     }
 

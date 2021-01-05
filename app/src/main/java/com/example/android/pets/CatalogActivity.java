@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -74,7 +75,7 @@ public class CatalogActivity extends AppCompatActivity {
      * the pets database.
      */
     private void displayDatabaseInfo() {
-        
+
         /**
          * Define a projection hat specifies which columns from the database
          */
@@ -138,15 +139,16 @@ public class CatalogActivity extends AppCompatActivity {
      * Saves a dummy pet to the database
      */
     private void insertPet() {
-        ContentValues pet = new ContentValues();
-        pet.put(PetEntry.COLUMN_PET_NAME, "Toto");
-        pet.put(PetEntry.COLUMN_PET_BREED, "Terrier");
-        pet.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_MALE);
-        pet.put(PetEntry.COLUMN_PET_WEIGHT, 7);
+        ContentValues values = new ContentValues();
+        values.put(PetEntry.COLUMN_PET_NAME, "Toto");
+        values.put(PetEntry.COLUMN_PET_BREED, "Terrier");
+        values.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_MALE);
+        values.put(PetEntry.COLUMN_PET_WEIGHT, 7);
 
-        // Gets the data repository in 'write' mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        long newRowId = db.insert(PetEntry.TABLE_NAME, null, pet);
+        // Insert a new row for Toto using the ContentResolver.
+        // Use the {@link PetEntry#CONTENT_URI} to indicate hat we want to insert into the pets database table.
+        // Receive the new content URI that will allow us to access Toto's data in the future.
+        Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, values);
     }
 
     @Override
